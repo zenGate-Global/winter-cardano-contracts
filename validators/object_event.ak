@@ -1,8 +1,9 @@
 use aiken/dict
 use aiken/list
 use aiken/string
-use aiken/transaction.{OutputReference, ScriptContext, Transaction} as tx
-use aiken/transaction.{Input, Mint, Output, Spend}
+use aiken/transaction.{
+  Input, Output, OutputReference, ScriptContext, Spend, Transaction,
+}
 use aiken/transaction/credential.{Address, PaymentCredential, ScriptCredential}
 use aiken/transaction/value
 use winter_protocol/datums.{ObjectDatum, valid_datum_recreation}
@@ -13,11 +14,6 @@ use winter_protocol/utils.{
 type Event {
   RecreateEvent
   SpendEvent
-}
-
-type Action {
-  SingletonMint
-  SingletonBurn
 }
 
 validator(payment_credential: PaymentCredential, fee_value_lovelace: Int) {
@@ -41,28 +37,6 @@ validator(payment_credential: PaymentCredential, fee_value_lovelace: Int) {
             }
         }
       _ -> False
-    }
-  }
-}
-
-validator(token_name: ByteArray, utxo_ref: OutputReference) {
-  fn singleton_mint_and_burn(rdmr: Action, ctx: ScriptContext) -> Bool {
-    let ScriptContext { transaction, purpose } = ctx
-    expect tx.Mint(policy_id) = purpose
-    let Transaction { inputs, mint, .. } = transaction
-    expect [(asset_name, amount)] =
-      mint
-        |> value.from_minted_value
-        |> value.tokens(policy_id)
-        |> dict.to_list()
-
-    when rdmr is {
-      SingletonMint -> {
-        expect
-          list.any(inputs, fn(input) { input.output_reference == utxo_ref })
-        amount == 1 && asset_name == token_name
-      }
-      SingletonBurn -> amount == -1 && asset_name == token_name
     }
   }
 }

@@ -43,11 +43,11 @@
       "hash": "ee750189018645e79cd4cc9d85b1453bd4ef3ebde2d18d5cb1ad0aa9"
     },
     {
-      "title": "object_event.singleton_mint_and_burn",
+      "title": "singleton.singleton_mint_and_burn",
       "redeemer": {
         "title": "rdmr",
         "schema": {
-          "$ref": "#/definitions/object_event~1Action"
+          "$ref": "#/definitions/singleton~1Action"
         }
       },
       "parameters": [
@@ -145,23 +145,6 @@
         }
       ]
     },
-    "object_event/Action": {
-      "title": "Action",
-      "anyOf": [
-        {
-          "title": "SingletonMint",
-          "dataType": "constructor",
-          "index": 0,
-          "fields": []
-        },
-        {
-          "title": "SingletonBurn",
-          "dataType": "constructor",
-          "index": 1,
-          "fields": []
-        }
-      ]
-    },
     "object_event/Event": {
       "title": "Event",
       "anyOf": [
@@ -173,6 +156,23 @@
         },
         {
           "title": "SpendEvent",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "singleton/Action": {
+      "title": "Action",
+      "anyOf": [
+        {
+          "title": "Mint",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "Burn",
           "dataType": "constructor",
           "index": 1,
           "fields": []
