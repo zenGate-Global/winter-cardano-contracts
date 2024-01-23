@@ -1,0 +1,14 @@
+name = "zengate/winter_protocol"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'zengate/winter_protocol'"
+
+[repository]
+user = "zengate"
+project = "winter_protocol"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.7.0"
+source = "github"
