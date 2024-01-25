@@ -22,10 +22,10 @@ pub fn valid_datum_recreation(
   expect InlineDatum(output_datum) = output.datum
   let casted_output_datum = to_object_datum(output_datum)
   and {
-    datum.protocol_version == casted_output_datum.protocol_version,
-    datum.data_reference == casted_output_datum.data_reference,
-    valid_event_creation_info(self_input, datum, casted_output_datum),
-    datum.signers == casted_output_datum.signers,
+    (datum.protocol_version == casted_output_datum.protocol_version)?,
+    (datum.data_reference == casted_output_datum.data_reference)?,
+    valid_event_creation_info(self_input, datum, casted_output_datum)?,
+    (datum.signers == casted_output_datum.signers)?,
   }
 }
 
@@ -35,9 +35,9 @@ fn valid_event_creation_info(
   recreated_datum: ObjectDatum,
 ) -> Bool {
   if datum.event_creation_info == "" {
-    recreated_datum.event_creation_info == self_input.output_reference.transaction_id.hash
+    (recreated_datum.event_creation_info == self_input.output_reference.transaction_id.hash)?
   } else {
-    recreated_datum.event_creation_info == datum.event_creation_info
+    (recreated_datum.event_creation_info == datum.event_creation_info)?
   }
 }
 
