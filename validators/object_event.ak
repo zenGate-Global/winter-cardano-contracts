@@ -28,11 +28,11 @@ validator(payment_credential: PaymentCredential, fee_value_lovelace: Int) {
           RecreateEvent -> and {
               valid_recreate_event(my_output_reference, ctx, datum)?,
               must_be_signed_by_at_least_one(ctx.transaction, datum.signers)?,
-              valid_winter_fee(ctx, payment_credential, fee_value_lovelace),
+              valid_winter_fee(ctx, payment_credential, fee_value_lovelace)?,
             }
           SpendEvent -> and {
               valid_burn(ctx, my_output_reference)?,
-              valid_winter_fee(ctx, payment_credential, fee_value_lovelace),
+              valid_winter_fee(ctx, payment_credential, fee_value_lovelace)?,
               must_be_signed_by_at_least_one(ctx.transaction, datum.signers)?,
             }
         }
@@ -65,7 +65,7 @@ fn valid_recreate_event(
     )
 
   let valid_ada_transfer =
-    value.lovelace_of(recreated_event_box_out.value) == value.lovelace_of(
+    value.lovelace_of(recreated_event_box_out.value) >= value.lovelace_of(
       self.output.value,
     )
 
@@ -75,9 +75,9 @@ fn valid_recreate_event(
     ) == 1
 
   and {
-    valid_ada_transfer,
-    valid_singleton_transfer,
-    valid_datum_recreation(self, datum, recreated_event_box_out),
+    valid_ada_transfer?,
+    valid_singleton_transfer?,
+    valid_datum_recreation(self, datum, recreated_event_box_out)?,
   }
 }
 
@@ -91,12 +91,14 @@ fn valid_winter_fee(
   trace string.from_int(list.length(ctx.transaction.outputs))
   {
     expect Some(winter_fee_output) = list.head(valid_outputs)
+    trace string.from_int(value.lovelace_of(winter_fee_output.value))
+    trace string.from_int(fee_value_lovelace)
     and {
       (list.length(valid_outputs) == 1)?,
       (list.length(
         value.policies(value.without_lovelace(winter_fee_output.value)),
       ) == 0)?,
-      (value.lovelace_of(winter_fee_output.value) == fee_value_lovelace)?,
+      (value.lovelace_of(winter_fee_output.value) >= fee_value_lovelace)?,
     }
   }
 }
