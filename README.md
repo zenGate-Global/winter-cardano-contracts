@@ -15,7 +15,7 @@ These are the main requirements the contracts need to fulfil:
 
 ### singleton
 
-This validator ensures onlt one unique singleton can be minted. 
+This validator ensures only one unique singleton can be minted. 
 It also allows for burn of respective singleton.
 
 ## object_event
