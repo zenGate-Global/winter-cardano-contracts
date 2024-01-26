@@ -1,6 +1,5 @@
 use aiken/dict
 use aiken/list
-use aiken/string
 use aiken/transaction.{
   Input, Output, OutputReference, ScriptContext, Spend, Transaction,
 }
@@ -88,18 +87,13 @@ fn valid_winter_fee(
 ) -> Bool {
   let valid_outputs =
     find_address_outputs(ctx.transaction.outputs, payment_credential)
-  trace string.from_int(list.length(ctx.transaction.outputs))
-  {
-    expect Some(winter_fee_output) = list.head(valid_outputs)
-    trace string.from_int(value.lovelace_of(winter_fee_output.value))
-    trace string.from_int(fee_value_lovelace)
-    and {
-      (list.length(valid_outputs) == 1)?,
-      (list.length(
-        value.policies(value.without_lovelace(winter_fee_output.value)),
-      ) == 0)?,
-      (value.lovelace_of(winter_fee_output.value) >= fee_value_lovelace)?,
-    }
+  expect Some(winter_fee_output) = list.head(valid_outputs)
+  and {
+    (list.length(valid_outputs) == 1)?,
+    (list.length(
+      value.policies(value.without_lovelace(winter_fee_output.value)),
+    ) == 0)?,
+    (value.lovelace_of(winter_fee_output.value) >= fee_value_lovelace)?,
   }
 }
 
