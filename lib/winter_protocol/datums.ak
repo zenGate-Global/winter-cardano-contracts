@@ -23,7 +23,7 @@ pub fn valid_datum_recreation(
   let casted_output_datum = to_object_datum(output_datum)
   and {
     (datum.protocol_version == casted_output_datum.protocol_version)?,
-    (datum.data_reference == casted_output_datum.data_reference)?,
+    (datum.data_reference != casted_output_datum.data_reference)?,
     valid_event_creation_info(self_input, datum, casted_output_datum)?,
     (datum.signers == casted_output_datum.signers)?,
   }

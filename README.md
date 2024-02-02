@@ -7,7 +7,7 @@ These contracts allow data to be securly and immutably saved and saved.
 These are the main requirements the contracts need to fulfil:
 
 - Allow minting and burning of singleton
-- Preserve datum data during recreation
+- Preserve certain datum data during recreation
 - Allow authorized addresses to interact with contract
 - Allow destruction of contract
 
@@ -32,6 +32,7 @@ This validator allows for two things:
 - datum is preserved
    - creation info is the txId of the original tx. Only the first utxo is empty, the rest must
      always point to the original tx.
+   - data referennce must be changed, because recreation is only done for error correction  
 - At least one signer in datum must be facilitating the transaction
 - winter fee must be paid
 
