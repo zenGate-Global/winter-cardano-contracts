@@ -65,7 +65,7 @@ fn valid_recreate_event(
 
   // original was this `value.lovelace_of(self.output.value)`, changed due to offchain limitations
   let valid_ada_transfer =
-    value.lovelace_of(recreated_event_box_out.value) >= 100_000_000
+    value.lovelace_of(recreated_event_box_out.value) >= 1_000_000
 
   let valid_singleton_transfer =
     list.length(
