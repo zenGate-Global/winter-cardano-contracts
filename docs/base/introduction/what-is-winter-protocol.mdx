@@ -1,0 +1,14 @@
+---
+title: Overview
+description: "Overview of Winter Cardano Contracts"
+order: 0
+---
+
+The Winter Protocol is designed to anchor a unique, evolving piece of data to the blockchain. This is achieved through a combination of two validators: a singleton minting policy to create a unique NFT that acts as an access token, and an object_event validator that governs the stateful UTXO holding the data and the singleton NFT.
+
+<Alert variant="info" title="This system ensures that">
+- A unique on-chain object can be created and identified.
+- The object's associated data can be updated under strict, predefined rules.
+- Only authorized parties (signers) can perform these actions.
+- The entire system can be cleanly dismantled, burning the unique token.
+</Alert>

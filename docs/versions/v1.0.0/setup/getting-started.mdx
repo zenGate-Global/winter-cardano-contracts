@@ -1,0 +1,37 @@
+---
+title: Getting Started
+description: "Starting with the Winter Cardano Contracts"
+order: 0
+---
+
+## Prerequisites
+
+<Alert variant="warning" title="Required">
+You need to have the [Aiken compiler](https://aiken-lang.org/getting-started/installation) installed and configured on your system. This project is configured to use Aiken `v1.0.26-alpha`.
+</Alert>
+
+## Building
+
+To compile the contracts, run the following command from the root of the repository:
+
+```bash
+aiken build
+```
+
+<Alert variant="info">
+This command type-checks the code and generates the compiled Plutus scripts and their metadata in the plutus.json file. This file is essential for building off-chain code and constructing transactions.
+</Alert>
+
+## Testing
+
+Run as such:
+
+```bash
+aiken check
+```
+
+To run only tests matching a specific string, for example `foo`, use the `-m` flag:
+
+```bash
+aiken check -m foo
+```
