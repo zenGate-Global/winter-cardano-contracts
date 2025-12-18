@@ -3,4 +3,7 @@ artifacts/
 # Aiken's project working directory
 build/
 # Aiken's default documentation export
-docs/
+docs/*
+!docs/assets/
+!docs/base/
+!docs/versions/

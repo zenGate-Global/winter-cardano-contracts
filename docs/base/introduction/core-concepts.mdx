@@ -1,0 +1,64 @@
+---
+title: Core Concepts
+description: "Core Concepts of Winter Cardano Contracts"
+order: 1
+---
+
+## The Singleton Token
+
+A key component of this protocol is a unique Non-Fungible Token (NFT), referred to as the "singleton". This token is minted by the singleton validator and its uniqueness is guaranteed by consuming a specific, one-time-use UTXO (utxo_ref) during its creation.
+
+The singleton token always resides within the object_event UTXO, acting as a key and ensuring that only one such stateful UTXO can exist for a given singleton.
+
+## The Object Event UTXO
+
+This is the main stateful UTXO of the protocol, locked by the object_event validator. It holds:
+
+- The singleton token.
+- The ObjectDatum, which contains the protocol's state.
+- A minimum amount of lovelace.
+
+## The Datum
+
+The on-chain state is stored in the ObjectDatum. It has the following structure:
+
+```aiken
+pub type ObjectDatum {
+  protocol_version: Int,
+  data_reference: ByteArray,
+  event_creation_info: Hash<Blake2b_256, Transaction>,
+  signers: List<VerificationKeyHash>,
+}
+```
+
+<Alert variant="info">Source: `lib/winter_protocol/datums.ak`</Alert>
+
+<TypeTable
+  title="ObjectDatum Fields"
+  data={[
+    {
+      name: "protocol_version",
+      type: "Int",
+      description: "A version number for the protocol, allowing for future upgrades.",
+      required: true,
+    },
+    {
+      name: "data_reference",
+      type: "ByteArray",
+      description: "A reference to the off-chain or on-chain data being anchored. This is the field that is expected to change during a \"recreation\" event.",
+      required: true,
+    },
+    {
+      name: "event_creation_info",
+      type: "Hash<Blake2b_256, Transaction>",
+      description: "The transaction ID of the initial creation transaction. This is set on the first recreation and remains immutable thereafter, acting as a permanent anchor to the object's origin.",
+      required: true,
+    },
+    {
+      name: "signers",
+      type: "List<VerificationKeyHash>",
+      description: "A list of public key hashes of authorized parties who can sign for transactions that interact with the contract.",
+      required: true,
+    },
+  ]}
+/>

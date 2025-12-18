@@ -1,0 +1,53 @@
+---
+title: Validators
+description: "Validators of Winter Cardano Contracts"
+order: 2
+---
+
+## 1. singleton
+
+This is a minting policy that controls the creation and destruction of the unique singleton token.
+
+**Purpose:** To guarantee that only one token with a specific token_name can ever be minted.
+
+**Redeemers:**
+
+- **Mint:** Allows minting exactly one token. Requires a specific utxo_ref to be spent in the same transaction, ensuring one-time minting.
+- **Burn:** Allows burning the token, which is required when the object_event UTXO is destroyed.
+
+<Alert variant="info">Source: `validators/singleton.ak`</Alert>
+
+## 2. object_event
+
+This validator script locks the stateful UTXO and enforces the core logic of the protocol.
+
+**Purpose:** Manages the lifecycle of the on-chain object, handling its recreation (update) and destruction.
+
+**Redeemers:**
+
+- **RecreateEvent:** To update the ObjectDatum.
+- **SpendEvent:** To destroy the contract state and burn the singleton.
+
+<Alert variant="info">Source: `validators/object_event.ak`</Alert>
+
+### RecreateEvent Rules
+
+This action allows updating the data_reference for error correction or other state changes.
+
+- The transaction must be signed by at least one of the authorized signers from the datum.
+- A new object_event UTXO must be created at the same script address.
+- The singleton token must be passed from the old UTXO to the new one.
+- The lovelace value in the new UTXO must be greater than or equal to the lovelace in the current UTXO.
+- The ObjectDatum must be correctly preserved or updated:
+  - protocol_version and signers must remain the same.
+  - data_reference must be different (as this is the point of recreation).
+  - event_creation_info must be preserved (or set to the initial transaction ID if it was previously empty).
+- A protocol fee must be paid to a predefined address.
+
+### SpendEvent Rules
+
+This action allows the destruction of the on-chain object.
+
+- The transaction must be signed by at least one of the authorized signers from the datum.
+- The singleton token must be burned in the same transaction (amount = -1).
+- A protocol fee must be paid to a predefined address.
